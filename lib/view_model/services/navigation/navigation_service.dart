@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class NavigationServices {
+class NavigationService {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   void removeAndNavigateToRoute(String route) {

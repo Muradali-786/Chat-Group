@@ -1,3 +1,4 @@
+import 'package:chat_group/constant/app_style/app_style.dart';
 import 'package:flutter/material.dart';
 
 import '../../constant/app_style/app_color.dart';
@@ -7,13 +8,18 @@ class CustomRoundButton extends StatelessWidget {
   final VoidCallback onPress;
   final Color color, textColor;
   final bool loading;
+  final double height,width;
   const CustomRoundButton(
       {Key? key,
       required this.title,
       required this.onPress,
       required this.color,
       this.textColor = Colors.white,
-      this.loading = false})
+      this.loading = false,
+      this.height=50,
+        this.width=double.infinity
+
+      })
       : super(key: key);
 
   @override
@@ -21,8 +27,8 @@ class CustomRoundButton extends StatelessWidget {
     return InkWell(
       onTap: loading ? null : onPress,
       child: Container(
-        height: 50,
-        width: double.infinity,
+        height:height,
+        width: width,
         decoration: BoxDecoration(
             color: color, borderRadius: BorderRadius.circular(40)),
         child: loading
@@ -33,10 +39,7 @@ class CustomRoundButton extends StatelessWidget {
             : Center(
                 child: Text(
                 title,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline1!
-                    .copyWith(fontSize: 16, color: textColor),
+                style:AppStyle().defaultStyle(22, textColor, FontWeight.normal),
               )),
       ),
     );

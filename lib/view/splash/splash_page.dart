@@ -1,11 +1,15 @@
 import 'package:chat_group/constant/app_style/app_color.dart';
-import 'package:chat_group/view_model/services/navigation_services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:io';
 import 'package:get_it/get_it.dart';
-import '../constant/image_url/image_url.dart';
+import '../../constant/image_url/image_url.dart';
+import '../../view_model/services/cloud_storage/cloud_storage_service.dart';
+import '../../view_model/services/data_base/data_base_service.dart';
+import '../../view_model/services/media/media_service.dart';
+import '../../view_model/services/navigation/navigation_service.dart';
+
 
 class SplashPage extends StatefulWidget {
   final VoidCallback onInitializationComplete;
@@ -24,8 +28,12 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _setup().then(
-      (_) => widget.onInitializationComplete(),
+    Future.delayed(const Duration(seconds: 1)).then(
+      (_) {
+        _setup().then(
+          (_) => widget.onInitializationComplete(),
+        );
+      },
     );
   }
 
@@ -68,11 +76,20 @@ class _SplashPageState extends State<SplashPage> {
     _registerService();
   }
 
-
   //singleton class
   void _registerService() {
-    GetIt.instance.registerSingleton<NavigationServices>(
-      NavigationServices(),
+    GetIt.instance.registerSingleton<NavigationService>(
+      NavigationService(),
+    );
+    GetIt.instance.registerSingleton<MediaService>(
+      MediaService(),
+    );
+    GetIt.instance.registerSingleton<CloudStorageService>(
+      CloudStorageService(),
+    );
+
+    GetIt.instance.registerSingleton<DataBaseService>(
+      DataBaseService(),
     );
   }
 }

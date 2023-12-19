@@ -2,72 +2,72 @@ import 'package:flutter/material.dart';
 
 import '../../constant/app_style/app_color.dart';
 
-class InputTextField extends StatelessWidget {
-
+class CustomInputTextField extends StatelessWidget {
   final TextEditingController myController;
   final FocusNode focusNode;
   final FormFieldSetter onFieldSubmittedValue;
+  final Function(String) onSaved;
 
-  final FormFieldValidator onValidator;
+  // final FormFieldValidator onValidator;
   final TextInputType keyBoardType;
   final bool obsecureText;
-  final String hint;
+  final String hint, regEx;
   final Color cursorColor;
-  final bool enable,autoFocus;
-  const InputTextField({Key? key,
-    this.cursorColor=AppColor.kBlack,
-    required this.myController,
-    required this.focusNode,
-    required this.onFieldSubmittedValue,
-    required this.hint,
-
-    required this.onValidator,
-    required this.keyBoardType,
-    this.obsecureText=false,
-    this.enable=true,
-    this.autoFocus=true,
-
-
-
-
-  }) : super(key: key);
+  final bool enable, autoFocus;
+  IconData? icon;
+  CustomInputTextField(
+      {Key? key,
+      this.cursorColor = AppColor.kWhite,
+      required this.myController,
+      required this.focusNode,
+      required this.onSaved,
+      required this.onFieldSubmittedValue,
+      required this.hint,
+      required this.regEx,
+      // required this.onValidator,
+      required this.keyBoardType,
+      this.obsecureText = false,
+      this.enable = true,
+      this.autoFocus = true,
+      this.icon})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(top:30),
       child: TextFormField(
         controller: myController,
         focusNode: focusNode,
         onFieldSubmitted: onFieldSubmittedValue,
-        validator: onValidator,
+        validator: (val) {
+          return RegExp(regEx).hasMatch(val!) ? null : 'Enter a valid Value';
+        },
         keyboardType: keyBoardType,
         cursorColor: cursorColor,
         enabled: enable,
-        onTapOutside: (event)=>FocusScope.of(context).unfocus(),
-        style: Theme.of(context).textTheme.bodyText2!.copyWith(height: 0,fontSize: 19),
+        onSaved: (value) => onSaved(value!),
+        onTapOutside: (event) => FocusScope.of(context).unfocus(),
+        style: const TextStyle(color: AppColor.kTextWhiteColor),
         decoration: InputDecoration(
             hintText: hint,
-            contentPadding: const EdgeInsets.all(15),
-            // hintStyle: Theme.of(context).textTheme.bodyText2!.copyWith(height: 0,color: AppColors.primaryTextTextColor.withOpacity(0.8)),
-            border: OutlineInputBorder(
-                // borderSide: const BorderSide(color: AppColors.textFieldDefaultFocus),
-                borderRadius: BorderRadius.circular(8)
-            ),
-            focusedBorder: OutlineInputBorder(
-                // borderSide:const  BorderSide(color: AppColors.textFieldFocusBorderColor),
-                borderRadius: BorderRadius.circular(8)
-            ),
-            errorBorder: OutlineInputBorder(
-                // borderSide: const BorderSide(color: AppColors.alertColor),
-                borderRadius: BorderRadius.circular(8)
-            ),
-            enabledBorder: OutlineInputBorder(
-                // borderSide:const  BorderSide(color: AppColors.textFieldDefaultBorderColor),
-                borderRadius: BorderRadius.circular(8)
-            )
+            hintStyle: const TextStyle(color: Colors.white54),
+            fillColor: AppColor.kThemeColor,
+            filled: true,
 
-        ),
+            contentPadding: const EdgeInsets.all(15),
+            border: OutlineInputBorder(
+                borderSide: const BorderSide(color: AppColor.kThemeColor),
+                borderRadius: BorderRadius.circular(8)),
+            focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: AppColor.kThemeColor),
+                borderRadius: BorderRadius.circular(8)),
+            errorBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: AppColor.kAlertColor),
+                borderRadius: BorderRadius.circular(8)),
+            enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: AppColor.kThemeColor),
+                borderRadius: BorderRadius.circular(8))),
       ),
     );
   }
