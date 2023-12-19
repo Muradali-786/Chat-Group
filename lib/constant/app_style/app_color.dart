@@ -6,7 +6,8 @@ class AppColor{
   static const Color kWhiteF7 = Color(0xfff7f7f7);
   static const Color kWhiteFA = Color(0xffFAFAFA);
   static const Color kWhiteEF = Color(0xffEFEFEF);
-  static const Color kBgColor=Color(0xffF9F9F9);
+  static const Color kBgColor=Color(0xff242331);
+  static const Color kScaffoldBgColor=Color(0xff242331);
 
   static const Color kBlack = Color(0xff000000);
   static const Color kBlack0D = Color(0xff0d0d0d);
