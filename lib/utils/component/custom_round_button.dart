@@ -24,7 +24,7 @@ class CustomRoundButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: loading ? null : onPress,
       child: Container(
         height:height,

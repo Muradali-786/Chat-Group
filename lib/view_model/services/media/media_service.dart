@@ -3,7 +3,7 @@ import 'package:file_picker/file_picker.dart';
 class MediaService {
   MediaService() {}
 
-  Future<PlatformFile?> _pickImageFromLibrary() async {
+  Future<PlatformFile?> pickImageFromLibrary() async {
     FilePickerResult? _result =
         await FilePicker.platform.pickFiles(type: FileType.image);
 
@@ -12,4 +12,7 @@ class MediaService {
     }
     return null;
   }
+
+
+
 }

@@ -39,8 +39,6 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    double h = MediaQuery.sizeOf(context).height;
-    double w = MediaQuery.of(context).size.height;
     return MaterialApp(
         title: 'Group Chat',
         color: AppColor.kBgColor,
