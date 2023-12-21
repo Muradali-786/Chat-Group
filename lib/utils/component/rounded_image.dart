@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chat_group/constant/app_style/app_color.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -81,7 +82,7 @@ class RoundedImageNetworkWithStatusIndicator extends RoundedImageNetwork {
           height: size * 0.20,
           width: size * 0.20,
           decoration: BoxDecoration(
-            color: isActive ? Colors.green : Colors.red,
+            color: isActive ? AppColor.kGreenColor : AppColor.kRedColor,
             borderRadius: BorderRadius.circular(size),
           ),
         ),

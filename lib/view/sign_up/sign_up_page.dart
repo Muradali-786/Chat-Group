@@ -91,10 +91,10 @@ class _SignUpPageState extends State<SignUpPage> {
     return GestureDetector(
       onTap: () {
         GetIt.instance.get<MediaService>().pickImageFromLibrary().then(
-          (_file) {
+          (file) {
             setState(
               () {
-                _profileImage = _file;
+                _profileImage = file;
               },
             );
           },
@@ -178,9 +178,9 @@ class _SignUpPageState extends State<SignUpPage> {
               _emailController.text,
               imageURL!.toString(),
             );
-            await _authenticationProvider.logout();
-            await _authenticationProvider.loginUsingEmailAndPassword(
-                _emailController.text, _passController.text.toString());
+            // await _authenticationProvider.logout();
+            // await _authenticationProvider.loginUsingEmailAndPassword(
+            //     _emailController.text, _passController.text.toString());
           }
         },
         color: AppColor.kButtonColor);

@@ -1,6 +1,7 @@
+import 'package:chat_group/view_model/services/navigation/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
 
 const String USER_COLLECTION = "Users";
 const String CHAT_COLLECTION = 'Chats';
@@ -19,6 +20,9 @@ class DataBaseService {
         "name": name,
         "image": imageURL,
         "last_active": DateTime.now().toUtc(),
+      }).then((value) {
+        GetIt.instance.get<NavigationService>().removeAndNavigateToRoute('/home');
+
       });
     } catch (e) {
       if (kDebugMode) {

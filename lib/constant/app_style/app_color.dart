@@ -23,6 +23,9 @@ class AppColor {
 
   static const Color kAlertColor = Color(0xffff0f0f);
 
+  static const Color kRedColor = Color(0xffff0f0f);
+   static const Color kGreenColor =Color.fromRGBO(76, 175, 80, 1.0);
+
   static const Color kTextWhiteColor = Color(0xffffffff);
   static const Color kTextBlackColor = Color(0xff000000);
   static const Color kTextGreyColor = Color(0xff9B9B9B);

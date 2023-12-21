@@ -26,31 +26,34 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(providers: [
-      ChangeNotifierProvider<AuthenticationProvider>(create: (BuildContext context){
-        return AuthenticationProvider();
-      })
-    ],
-    child: MaterialApp(
-      title: "Group Chat",
-      debugShowCheckedModeBanner: false,
-      color: AppColor.kBgColor,
-      theme: ThemeData(
-        scaffoldBackgroundColor: AppColor.kScaffoldBgColor,
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: AppColor.kBgColor,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthenticationProvider>(
+            create: (BuildContext context) {
+          return AuthenticationProvider();
+        })
+      ],
+      child: MaterialApp(
+        title: "Group Chat",
+        debugShowCheckedModeBanner: false,
+        color: AppColor.kBgColor,
+        theme: ThemeData(
+          scaffoldBackgroundColor: AppColor.kScaffoldBgColor,
+          primarySwatch: Colors.blue,
+          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+            backgroundColor: AppColor.kNavBarBgColor,
+            selectedIconTheme: IconThemeData(color: Colors.blue),
+            selectedLabelStyle: TextStyle(color: Colors.blue),
+          ),
         ),
+        navigatorKey: NavigationService.navigatorKey,
+        initialRoute: '/login',
+        routes: {
+          '/login': (BuildContext context) => const LoginPage(),
+          '/sign_up': (BuildContext context) => const SignUpPage(),
+          '/home': (BuildContext context) => const HomePage(),
+        },
       ),
-      navigatorKey: NavigationService.navigatorKey,
-      initialRoute: '/login',
-      routes: {
-
-        '/login':(BuildContext context)=>const LoginPage(),
-        '/sign_up':(BuildContext context)=>const SignUpPage(),
-        '/home':(BuildContext context)=>const HomePage(),
-
-      },
-    ),
     );
   }
 }
