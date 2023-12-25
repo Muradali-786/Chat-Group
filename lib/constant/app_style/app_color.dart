@@ -7,9 +7,11 @@ class AppColor {
   static const Color kWhiteEF = Color(0xffEFEFEF);
   static const Color kBgColor = Color(0xff242331);
   static const Color kScaffoldBgColor = Color(0xff242331);
+
   static const Color kThemeColor = Color.fromRGBO(30, 29, 37, 1.0);
   static const Color kNavBarBgColor = Color.fromRGBO(30, 29, 37, 1.0);
   static const Color kButtonColor = Color.fromRGBO(0, 82, 218, 1.0);
+  static const Color kGreenColor = Color.fromRGBO(76, 175, 80, 1.0);
 
   static const Color kBlack = Color(0xff000000);
   static const Color kBlack0D = Color(0xff0d0d0d);
@@ -24,7 +26,7 @@ class AppColor {
   static const Color kAlertColor = Color(0xffff0f0f);
 
   static const Color kRedColor = Color(0xffff0f0f);
-   static const Color kGreenColor =Color.fromRGBO(76, 175, 80, 1.0);
+
 
   static const Color kTextWhiteColor = Color(0xffffffff);
   static const Color kTextBlackColor = Color(0xff000000);
