@@ -9,6 +9,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 
+//check if it is okay
+
 class ChatPageProvider with ChangeNotifier {
   late DataBaseService db;
   late CloudStorageService storageService;
