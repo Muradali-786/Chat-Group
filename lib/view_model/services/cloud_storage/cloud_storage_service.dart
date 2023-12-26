@@ -11,7 +11,6 @@ const String USER_COLLECTION = "Users";
 class CloudStorageService {
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-
   CloudStorageService() {}
 
   Future<String?> saveUserImageToStorage(String uid, PlatformFile file) async {
@@ -19,15 +18,12 @@ class CloudStorageService {
       Reference ref =
           _storage.ref().child('images/users/$uid/profile.${file.extension}');
 
-
-
       UploadTask uploadTask = ref.putFile(
         File(file.path!),
       );
       await Future.value(uploadTask);
-      final newUrl=await ref.getDownloadURL();
+      final newUrl = await ref.getDownloadURL();
       return newUrl.toString();
-
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -37,7 +33,7 @@ class CloudStorageService {
   }
 
   Future<String?> saveChatImage(
-      String userId, String _chatId, PlatformFile file) async {
+      String _chatId, String userId, PlatformFile file) async {
     try {
       Reference ref = _storage.ref().child(
           'images/chats/${_chatId}/${userId}_${Timestamp.now().millisecondsSinceEpoch}.${file.extension}');
@@ -46,9 +42,8 @@ class CloudStorageService {
         File(file.path!),
       );
       await Future.value(uploadTask);
-      final newUrl=await ref.getDownloadURL();
+      final newUrl = await ref.getDownloadURL();
       return newUrl.toString();
-
     } catch (e) {
       if (kDebugMode) {
         print(e);

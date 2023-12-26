@@ -4,8 +4,11 @@ import 'package:chat_group/model/chat_message.dart';
 import 'package:chat_group/model/chat_user.dart';
 import 'package:chat_group/utils/component/custom_list_tile.dart';
 import 'package:chat_group/utils/component/top_bar.dart';
-import 'package:chat_group/view_model/chat/chat_page_provider.dart';
+import 'package:chat_group/view/chat_1v1/chat_page.dart';
+import 'package:chat_group/view_model/chats/chats_page_provider.dart';
+import 'package:chat_group/view_model/services/navigation/navigation_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../../view_model/auth/auth_provider.dart';
@@ -21,17 +24,19 @@ class _ChatsPageState extends State<ChatsPage> {
   late double deviceHeight;
   late double deviceWidth;
   late AuthenticationProvider _authenticationProvider;
-  late ChatPageProvider _chatPageProvider;
+  late ChatsPageProvider _chatPageProvider;
+  late NavigationService _navigationService;
 
   @override
   Widget build(BuildContext context) {
     deviceHeight = MediaQuery.of(context).size.height;
     deviceWidth = MediaQuery.of(context).size.width;
     _authenticationProvider = Provider.of<AuthenticationProvider>(context);
+    _navigationService=GetIt.instance.get<NavigationService>();
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => ChatPageProvider(_authenticationProvider),
+        ChangeNotifierProvider<ChatsPageProvider>(
+          create: (_) => ChatsPageProvider(_authenticationProvider),
         )
       ],
       child: _builtUi(),
@@ -41,7 +46,7 @@ class _ChatsPageState extends State<ChatsPage> {
   Widget _builtUi() {
     return Builder(
       builder: (BuildContext context) {
-        _chatPageProvider = context.watch<ChatPageProvider>();
+        _chatPageProvider = context.watch<ChatsPageProvider>();
         //triger the widget to reredner it self
         return Container(
           height: deviceHeight * 0.98,
@@ -123,6 +128,9 @@ class _ChatsPageState extends State<ChatsPage> {
         imagePath: chat.imageURL(),
         isActive: isActive,
         isActivity: chat.activity,
-        onTap: () {});
+        onTap: () {
+          _navigationService.navigateToPage(ChatPage(chat: chat));
+
+        });
   }
 }

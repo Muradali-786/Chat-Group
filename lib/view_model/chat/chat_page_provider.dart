@@ -1,88 +1,108 @@
 import 'dart:async';
 import 'package:chat_group/model/chat_message.dart';
-import 'package:chat_group/model/chat_user.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
-
+import 'package:chat_group/view_model/auth/auth_provider.dart';
+import 'package:chat_group/view_model/services/cloud_storage/cloud_storage_service.dart';
 import 'package:chat_group/view_model/services/data_base/data_base_service.dart';
+import 'package:chat_group/view_model/services/media/media_service.dart';
+import 'package:chat_group/view_model/services/navigation/navigation_service.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../model/chat.dart';
-import '../auth/auth_provider.dart';
-
 class ChatPageProvider with ChangeNotifier {
-  AuthenticationProvider _authenticationProvider;
-
   late DataBaseService db;
+  late CloudStorageService storageService;
+  late MediaService mediaService;
+  late NavigationService navigationService;
 
-  List<Chat>? chats;
+  AuthenticationProvider _authenticationProvider;
+  ScrollController _messageViewController;
 
-  late StreamSubscription _chatSream;
+  late StreamSubscription _messagesStream;
 
-  ChatPageProvider(this._authenticationProvider) {
+  String _chatId;
+  List<ChatMessageModel>? messages;
+
+  String? _message;
+  String get message {
+    return message;
+  }
+
+  ChatPageProvider(
+      this._chatId, this._authenticationProvider, this._messageViewController) {
     db = GetIt.instance.get<DataBaseService>();
-    getChats();
+    storageService = GetIt.instance.get<CloudStorageService>();
+    mediaService = GetIt.instance.get<MediaService>();
+    navigationService = GetIt.instance.get<NavigationService>();
+    listenToChat();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    _chatSream.cancel();
+    _messagesStream.cancel();
     super.dispose();
   }
 
-  void getChats() async {
+  void deleteChat() {
+    goBack();
+    db.deleteChat(_chatId);
+  }
+
+  void sentTextMessage() {
+    if (_message != null) {
+      ChatMessageModel _messageToSent = ChatMessageModel(
+        content: _message!,
+        type: MessageType.TEXT,
+        senderID: _authenticationProvider.chatUserData.uid,
+        sentTime: DateTime.now(),
+      );
+      db.addMessageToChat(_chatId, _messageToSent);
+    }
+  }
+
+  void sentImageMessage() async {
     try {
-      _chatSream = db
-          .getChatsForUser(_authenticationProvider.chatUserData.uid)
-          .listen((snapshot) async {
-        chats = await Future.wait(
-          snapshot.docs.map(
-                (d) async {
-              Map<String, dynamic> _chatData = d.data() as Map<String, dynamic>;
+      PlatformFile? _file = await mediaService.pickImageFromLibrary();
 
-              // Give the members
-              List<ChatUserModel> members = [];
-              for (var uid in _chatData['members']) {
-                DocumentSnapshot userSnapshot = await db.getUser(uid);
-                Map<String, dynamic> _userData =
-                userSnapshot.data() as Map<String, dynamic>;
-                _userData["uid"] = userSnapshot.id;
-                ChatUserModel member = ChatUserModel.fromJSON(_userData);
-                members.add(member); // Add the member to the list
-              }
+      if (_file != null) {
+        String? downloadURL = await storageService.saveChatImage(
+            _chatId, _authenticationProvider.chatUserData.uid, _file);
 
-              // Give the last chat
-              List<ChatMessageModel> messages = [];
-              QuerySnapshot chatMessage = await db.getLastMessageOfChat(d.id);
-              if (chatMessage.docs.isNotEmpty) {
-                Map<String, dynamic> messageData =
-                chatMessage.docs.first.data()! as Map<String, dynamic>;
-
-                ChatMessageModel chatMessageModel =
-                ChatMessageModel.fromJSON(messageData);
-                messages.add(chatMessageModel);
-              }
-
-
-
-              return Chat(
-                uid: d.id,
-                currentUserUid: _authenticationProvider.chatUserData.uid,
-                members: members,
-                messages: messages, // Assign the fetched messages
-                activity: _chatData['is_activity'],
-                group: _chatData['is_group'],
-              );
-            },
-          ).toList(),
+        ChatMessageModel messageToSent = ChatMessageModel(
+          content: downloadURL!,
+          type: MessageType.IMAGE,
+          senderID: _authenticationProvider.chatUserData.uid,
+          sentTime: DateTime.now(),
         );
-        notifyListeners();
-      });
+        db.addMessageToChat(_chatId, messageToSent);
+      }
     } catch (e) {
-      print('error while loading chat');
+      print('error sending message');
       print(e);
     }
   }
 
+  void goBack() {
+    navigationService.goBack();
+  }
+
+  void listenToChat() {
+    try {
+      _messagesStream = db.streamMessageFoChat(_chatId).listen((snapshot) {
+        List<ChatMessageModel> _messages = snapshot.docs.map((m) {
+          Map<String, dynamic> messageData = m.data() as Map<String, dynamic>;
+
+          return ChatMessageModel.fromJSON(messageData);
+        }).toList();
+
+        messages = _messages;
+        notifyListeners();
+
+        //Add Scroll to bottom Call
+      });
+    } catch (e) {
+      print('error during listening message');
+      print(e);
+    }
+  }
 }
