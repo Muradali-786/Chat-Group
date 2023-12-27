@@ -1,4 +1,6 @@
 import 'package:chat_group/constant/app_style/app_color.dart';
+import 'package:chat_group/model/chat_message.dart';
+import 'package:chat_group/utils/component/custom_list_tile.dart';
 import 'package:chat_group/utils/component/top_bar.dart';
 import 'package:chat_group/view_model/chat/chat_page_provider.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +29,10 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _messageFormState=GlobalKey<FormState>();
-    _messageListViewController=ScrollController();
-
+    _messageFormState = GlobalKey<FormState>();
+    _messageListViewController = ScrollController();
   }
+
   @override
   Widget build(BuildContext context) {
     deviceHeight = MediaQuery.of(context).size.height;
@@ -49,7 +51,7 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _builtUI() {
     return Builder(builder: (BuildContext context) {
-      chatPageProvider=context.watch<ChatPageProvider>();
+      chatPageProvider = context.watch<ChatPageProvider>();
       return Scaffold(
         body: SingleChildScrollView(
           child: Container(
@@ -77,12 +79,54 @@ class _ChatPageState extends State<ChatPage> {
                         Icons.arrow_back_ios_rounded,
                         color: AppColor.kDeepBlueColor,
                       )),
-                )
+                ),
+                _messageListView()
               ],
             ),
           ),
         ),
       );
     });
+  }
+
+  Widget _messageListView() {
+    if (chatPageProvider.messages != null) {
+      if (chatPageProvider.messages!.length != 0) {
+        return Container(
+          height: deviceHeight * 0.74,
+          child: ListView.builder(
+              itemCount: chatPageProvider.messages!.length,
+              itemBuilder: (BuildContext context, int index) {
+                ChatMessageModel message = chatPageProvider.messages![index];
+                bool isOwnMessage = message.senderID ==
+                    _authenticationProvider.chatUserData.uid;
+                return Container(
+                  child: CustomChatListViewTile(
+                      width: deviceWidth * 0.08,
+                      deviceHeight: deviceHeight,
+                      isOwnMessage: isOwnMessage,
+                      message: message,
+                      sender: widget.chat.members
+                          .where((e) => e.uid == message.senderID)
+                          .first),
+                );
+              }),
+        );
+      } else {
+        return const Align(
+          alignment: Alignment.center,
+          child: Text(
+            'Be the First one to say Hii',
+            style: TextStyle(color: AppColor.kTextWhiteColor),
+          ),
+        );
+      }
+    } else {
+      return const Center(
+        child: CircularProgressIndicator(
+          color: AppColor.kWhite,
+        ),
+      );
+    }
   }
 }
