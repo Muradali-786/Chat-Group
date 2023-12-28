@@ -13,6 +13,7 @@ class AppColor {
   static const Color kButtonColor = Color.fromRGBO(0, 82, 218, 1.0);
   static const Color kGreenColor = Color.fromRGBO(76, 175, 80, 1.0);
   static const Color kDeepBlueColor = Color.fromRGBO(0, 82, 218, 1.0);
+  static const Color kLightBlueColor = Color.fromRGBO(0, 136, 249, 1.0);
 
   static const Color kBlack = Color(0xff000000);
   static const Color kBlack0D = Color(0xff0d0d0d);

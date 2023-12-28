@@ -7,6 +7,8 @@ import 'package:chat_group/utils/component/rounded_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import 'message_bubble.dart';
+
 //Widgets
 // import '../widgets/rounded_image.dart';
 // import '../widgets/message_bubbles.dart';
@@ -156,19 +158,19 @@ class CustomChatListViewTile extends StatelessWidget {
           SizedBox(
             width: width * 0.05,
           ),
-          // message.type == MessageType.TEXT
-          //     ? TextMessageBubble(
-          //   isOwnMessage: isOwnMessage,
-          //   message: message,
-          //   height: deviceHeight * 0.06,
-          //   width: width,
-          // )
-          //     : ImageMessageBubble(
-          //   isOwnMessage: isOwnMessage,
-          //   message: message,
-          //   height: deviceHeight * 0.30,
-          //   width: width * 0.55,
-          // ),
+          message.type == MessageType.TEXT
+              ? TextMessageBubble(
+            isOwnMessage: isOwnMessage,
+            message: message,
+            height: 47,
+            width: width,
+          )
+              : ImageMessageBubble(
+            isOwnMessage: isOwnMessage,
+            message: message,
+            height: deviceHeight * 0.30,
+            width: width * 0.55,
+          ),
         ],
       ),
     );

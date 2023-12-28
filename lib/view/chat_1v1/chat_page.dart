@@ -60,8 +60,8 @@ class _ChatPageState extends State<ChatPage> {
             padding: EdgeInsets.symmetric(
                 horizontal: deviceWidth * 0.03, vertical: deviceHeight * 0.03),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: [
                 TopBar(
@@ -80,6 +80,7 @@ class _ChatPageState extends State<ChatPage> {
                         color: AppColor.kDeepBlueColor,
                       )),
                 ),
+                SizedBox(height: deviceHeight * 0.02),
                 _messageListView()
               ],
             ),
@@ -92,7 +93,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget _messageListView() {
     if (chatPageProvider.messages != null) {
       if (chatPageProvider.messages!.length != 0) {
-        return Container(
+        return SizedBox(
           height: deviceHeight * 0.74,
           child: ListView.builder(
               itemCount: chatPageProvider.messages!.length,
@@ -100,16 +101,14 @@ class _ChatPageState extends State<ChatPage> {
                 ChatMessageModel message = chatPageProvider.messages![index];
                 bool isOwnMessage = message.senderID ==
                     _authenticationProvider.chatUserData.uid;
-                return Container(
-                  child: CustomChatListViewTile(
-                      width: deviceWidth * 0.08,
-                      deviceHeight: deviceHeight,
-                      isOwnMessage: isOwnMessage,
-                      message: message,
-                      sender: widget.chat.members
-                          .where((e) => e.uid == message.senderID)
-                          .first),
-                );
+                return CustomChatListViewTile(
+                    width: deviceWidth * 0.65,
+                    deviceHeight: deviceHeight,
+                    isOwnMessage: isOwnMessage,
+                    message: message,
+                    sender: widget.chat.members
+                        .where((e) => e.uid == message.senderID)
+                        .first);
               }),
         );
       } else {
