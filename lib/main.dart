@@ -40,6 +40,7 @@ class MainApp extends StatelessWidget {
         theme: ThemeData(
           scaffoldBackgroundColor: AppColor.kScaffoldBgColor,
           primarySwatch: Colors.blue,
+          useMaterial3: false,
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             backgroundColor: AppColor.kNavBarBgColor,
             selectedIconTheme: IconThemeData(color: Colors.blue),

@@ -80,11 +80,11 @@ class DataBaseService {
     }
   }
 
-  Future<void> updateChatData(String chatId, Map<String, dynamic> _data) async {
+  Future<void> updateChatData(
+      String _chatID, Map<String, dynamic> _data) async {
     try {
-      await _db.collection(MESSAGE_COLLECTION).doc(chatId).update(_data);
+      await _db.collection(CHAT_COLLECTION).doc(_chatID).update(_data);
     } catch (e) {
-      print('erro while updating chat');
       print(e);
     }
   }

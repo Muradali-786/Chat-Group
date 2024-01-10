@@ -1,11 +1,11 @@
 import 'package:chat_group/constant/app_style/app_color.dart';
 import 'package:chat_group/model/chat_message.dart';
+import 'package:chat_group/utils/component/custom_input_text_filed.dart';
 import 'package:chat_group/utils/component/custom_list_tile.dart';
 import 'package:chat_group/utils/component/top_bar.dart';
 import 'package:chat_group/view_model/chat/chat_page_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../model/chat.dart';
 import '../../view_model/auth/auth_provider.dart';
 
@@ -32,6 +32,9 @@ class _ChatPageState extends State<ChatPage> {
     _messageFormState = GlobalKey<FormState>();
     _messageListViewController = ScrollController();
   }
+
+  final msgController = TextEditingController();
+  final msgFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -68,20 +71,25 @@ class _ChatPageState extends State<ChatPage> {
                   widget.chat.title(),
                   fontSize: 22,
                   primaryAction: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        chatPageProvider.deleteChat();
+                      },
                       icon: const Icon(
                         Icons.delete,
                         color: AppColor.kDeepBlueColor,
                       )),
                   secondaryAction: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        chatPageProvider.goBack();
+                      },
                       icon: const Icon(
                         Icons.arrow_back_ios_rounded,
                         color: AppColor.kDeepBlueColor,
                       )),
                 ),
                 SizedBox(height: deviceHeight * 0.02),
-                _messageListView()
+                _messageListView(),
+                _sendMessage(),
               ],
             ),
           ),
@@ -97,6 +105,7 @@ class _ChatPageState extends State<ChatPage> {
           height: deviceHeight * 0.74,
           child: ListView.builder(
               itemCount: chatPageProvider.messages!.length,
+              controller: _messageListViewController,
               itemBuilder: (BuildContext context, int index) {
                 ChatMessageModel message = chatPageProvider.messages![index];
                 bool isOwnMessage = message.senderID ==
@@ -127,5 +136,85 @@ class _ChatPageState extends State<ChatPage> {
         ),
       );
     }
+  }
+
+  Widget _sendMessage() {
+    return Container(
+      height: deviceHeight * 0.095,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppColor.kBgColor,
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: Form(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          _messageTextFiled(),
+          _sendMessageButton(),
+          _imageMessageButton(),
+        ],
+      )),
+    );
+  }
+
+  Widget _messageTextFiled() {
+    chatPageProvider.message = msgController.text.toString();
+    return SizedBox(
+      width: deviceWidth * 0.7,
+      child: CustomInputTextField(
+          myController: msgController,
+          focusNode: msgFocus,
+          onSaved: (e) {
+            // chatPageProvider.message = e;
+          },
+          onFieldSubmittedValue: (e) {},
+          hint: 'Type your message',
+          regEx: r"^(?!\s*$).+",
+          keyBoardType: TextInputType.text),
+    );
+  }
+
+  Widget _sendMessageButton() {
+    double _size = deviceHeight * 0.04;
+    return Container(
+      height: _size,
+      width: _size,
+      margin: EdgeInsets.only(top: deviceHeight*0.02),
+      child: IconButton(
+        icon: const Icon(
+          Icons.send,
+          color: AppColor.kWhite,
+        ),
+        onPressed: () {
+          if (msgController.text.isNotEmpty) {
+            chatPageProvider.sentTextMessage();
+            msgController.clear();
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _imageMessageButton() {
+    double _size = deviceHeight * 0.04;
+    return Container(
+      height: _size,
+      width: _size,
+      margin: EdgeInsets.only(top: deviceHeight*0.035),
+      child: FloatingActionButton(
+        backgroundColor: AppColor.kButtonColor,
+        onPressed: () {
+          chatPageProvider.sentImageMessage();
+        },
+        child: Center(
+            child: const Icon(
+          Icons.camera_enhance,
+          color: AppColor.kWhite,
+        )),
+      ),
+    );
   }
 }

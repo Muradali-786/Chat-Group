@@ -69,7 +69,7 @@ class ImageMessageBubble extends StatelessWidget {
   final double height;
   final double width;
 
-  ImageMessageBubble(
+  const ImageMessageBubble(
       {required this.isOwnMessage,
       required this.message,
       required this.height,

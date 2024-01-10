@@ -70,7 +70,7 @@ class ChatsPageProvider with ChangeNotifier {
                 uid: d.id,
                 currentUserUid: _authenticationProvider.chatUserData.uid,
                 members: members,
-                messages: messages, // Assign the fetched messages
+                messages: messages,
                 activity: _chatData['is_activity'],
                 group: _chatData['is_group'],
               );
