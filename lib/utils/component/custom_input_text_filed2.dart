@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 class CustomTextFormField2 extends StatelessWidget {
@@ -8,9 +9,9 @@ class CustomTextFormField2 extends StatelessWidget {
 
   const CustomTextFormField2(
       {required this.onSaved,
-        required this.regEx,
-        required this.hintText,
-        required this.obscureText});
+      required this.regEx,
+      required this.hintText,
+      required this.obscureText});
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +46,10 @@ class CustomTextField extends StatelessWidget {
 
   CustomTextField(
       {required this.onEditingComplete,
-        required this.hintText,
-        required this.obscureText,
-        required this.controller,
-        this.icon});
+      required this.hintText,
+      required this.obscureText,
+      required this.controller,
+      this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +59,9 @@ class CustomTextField extends StatelessWidget {
       cursorColor: Colors.white,
       style: TextStyle(color: Colors.white),
       obscureText: obscureText,
+      maxLength: 1,
       decoration: InputDecoration(
-        fillColor: Color.fromRGBO(30, 29, 37, 1.0),
+        fillColor: const Color.fromRGBO(30, 29, 37, 1.0),
         filled: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),

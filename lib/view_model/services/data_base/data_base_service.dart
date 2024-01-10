@@ -1,4 +1,3 @@
-
 import 'package:chat_group/model/chat_message.dart';
 import 'package:chat_group/view_model/services/navigation/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -107,5 +106,15 @@ class DataBaseService {
       print('Error deleting chat');
       print(e);
     }
+  }
+
+  Future<QuerySnapshot> getAllUsers(String? name) {
+    Query _qery = _db.collection(USER_COLLECTION);
+    if (name != null) {
+      _qery = _qery
+          .where("name", isGreaterThanOrEqualTo: name)
+          .where("name", isLessThanOrEqualTo: name + "z");
+    }
+    return _qery.get();
   }
 }
