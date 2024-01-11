@@ -63,7 +63,7 @@ class _ChatPageState extends State<ChatPage> {
             padding: EdgeInsets.symmetric(
                 horizontal: deviceWidth * 0.03, vertical: deviceHeight * 0.03),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -172,7 +172,7 @@ class _ChatPageState extends State<ChatPage> {
           },
           onFieldSubmittedValue: (e) {},
           hint: 'Type your message',
-          regEx: r"^(?!\s*$).+",
+          regEx: r"^(\*$).+",
           keyBoardType: TextInputType.text),
     );
   }

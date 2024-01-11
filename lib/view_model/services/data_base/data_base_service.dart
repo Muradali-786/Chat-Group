@@ -117,4 +117,13 @@ class DataBaseService {
     }
     return _qery.get();
   }
+
+  Future<DocumentReference?> createChat(Map<String, dynamic> _data) async {
+    try {
+      DocumentReference chat = await _db.collection(CHAT_COLLECTION).add(_data);
+      return chat;
+    } catch (e) {
+      print(e);
+    }
+  }
 }

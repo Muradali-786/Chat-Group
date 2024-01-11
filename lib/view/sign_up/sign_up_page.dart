@@ -164,6 +164,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return CustomRoundButton(
         width: deviceWidth * 0.65,
         title: 'Sign Up',
+        loading: _authenticationProvider.loading,
         onPress: () async {
           if (_formKey.currentState!.validate() && _profileImage != null) {
             String? uid =

@@ -120,7 +120,7 @@ class ChatPageProvider with ChangeNotifier {
         messages = _messages;
         notifyListeners();
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (_messageViewController.position.hasListeners) {
+          if (_messageViewController.position.hasListeners && _messageViewController.position.hasPixels) {
             _messageViewController
                 .jumpTo(_messageViewController.position.maxScrollExtent);
           }

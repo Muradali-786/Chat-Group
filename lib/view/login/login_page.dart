@@ -30,6 +30,7 @@ class _LoginPageState extends State<LoginPage> {
   final _passController = TextEditingController();
   final _passFocus = FocusNode();
 
+
   @override
   Widget build(BuildContext context) {
     deviceHeight = MediaQuery.of(context).size.height;
@@ -115,6 +116,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _loginButton(BuildContext context) {
     return CustomRoundButton(
         width: deviceWidth * 0.65,
+        loading: _authenticationProvider.loading,
         title: 'Login',
         onPress: () {
           if (_formKey.currentState!.validate()) {
@@ -122,11 +124,11 @@ class _LoginPageState extends State<LoginPage> {
                 .loginUsingEmailAndPassword(
                   _emailController.text,
                   _passController.text.toString(),
-                )
-                .then((value) {});
-          }
+                );
 
-          print('login press');
+
+        }
+
         },
         color: AppColor.kButtonColor);
   }

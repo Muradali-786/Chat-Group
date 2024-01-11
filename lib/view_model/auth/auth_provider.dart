@@ -12,6 +12,14 @@ class AuthenticationProvider with ChangeNotifier {
   late final NavigationService _navigationService;
   late ChatUserModel chatUserData;
 
+
+  bool _loading = false;
+  bool get loading => _loading;
+  void setLoading(bool value) {
+    _loading = value;
+    notifyListeners();
+  }
+
   AuthenticationProvider() {
     _auth = FirebaseAuth.instance;
     _navigationService = GetIt.instance.get<NavigationService>();
@@ -44,19 +52,23 @@ class AuthenticationProvider with ChangeNotifier {
   }
 
   Future<void> loginUsingEmailAndPassword(String email, String password) async {
+    setLoading(true);
     try {
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then(
         (value) {
           print('login successful');
+          setLoading(false);
         },
       );
     } on FirebaseAuthException {
+      setLoading(false);
       if (kDebugMode) {
         print("error during login to firebase");
       }
     } catch (e) {
+      setLoading(false);
       if (kDebugMode) {
         print(
           e.toString(),
@@ -67,16 +79,21 @@ class AuthenticationProvider with ChangeNotifier {
 
   Future<String?> signUpWithEmailAndPassword(
       String email, String password) async {
+    setLoading(true);
     try {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
 
+      setLoading(false);
       return credential.user!.uid;
+
     } on FirebaseAuthException {
       if (kDebugMode) {
         print("error during signup to firebase");
+        setLoading(false);
       }
     } catch (e) {
+      setLoading(false);
       if (kDebugMode) {
         print(
           e.toString(),

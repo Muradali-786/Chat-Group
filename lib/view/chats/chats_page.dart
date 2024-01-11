@@ -74,7 +74,7 @@ class _ChatsPageState extends State<ChatsPage> {
           onPressed: () {
             _authenticationProvider.logout();
           },
-          icon: const Icon(Icons.logout)),
+          icon: const Icon(Icons.logout,color: AppColor.kButtonColor,)),
     );
   }
 

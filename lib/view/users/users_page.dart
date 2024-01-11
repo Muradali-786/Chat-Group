@@ -2,6 +2,7 @@ import 'package:chat_group/constant/app_style/app_color.dart';
 import 'package:chat_group/model/chat_user.dart';
 import 'package:chat_group/utils/component/custom_input_text_filed2.dart';
 import 'package:chat_group/utils/component/custom_list_tile.dart';
+import 'package:chat_group/utils/component/custom_round_button.dart';
 import 'package:chat_group/utils/component/top_bar.dart';
 import 'package:chat_group/view_model/user/user_page_provider.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,13 @@ class _UsersPageState extends State<UsersPage> {
   final searchFocus = FocusNode();
 
   late UserPageProvider _userPageProvider;
+
+  bool loading=false;
+  setLoading(v){
+    setState(() {
+      loading=v;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +66,9 @@ class _UsersPageState extends State<UsersPage> {
             TopBar(
               'Users',
               primaryAction: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _authenticationProvider.logout();
+                  },
                   icon: const Icon(
                     Icons.logout,
                     color: AppColor.kButtonColor,
@@ -69,6 +79,7 @@ class _UsersPageState extends State<UsersPage> {
             ),
             _searchField(),
             _usersList(),
+            _createChatButton(),
           ],
         ),
       );
@@ -79,7 +90,10 @@ class _UsersPageState extends State<UsersPage> {
     return SizedBox(
       height: deviceHeight * 0.09,
       child: CustomTextField(
-          onEditingComplete: (v) {},
+          onEditingComplete: (v) {
+            _userPageProvider.getUser(name: v);
+            FocusScope.of(context).unfocus();
+          },
           hintText: 'Search...',
           obscureText: false,
           controller: _searController),
@@ -128,19 +142,25 @@ class _UsersPageState extends State<UsersPage> {
     }());
   }
 
-  // Widget _createChatButton() {
-  //   return Visibility(
-  //     visible: _pageProvider.selectedUsers.isNotEmpty,
-  //     child: RoundedButton(
-  //       name: _pageProvider.selectedUsers.length == 1
-  //           ? "Chat With ${_pageProvider.selectedUsers.first.name}"
-  //           : "Create Group Chat",
-  //       height: _deviceHeight * 0.08,
-  //       width: _deviceWidth * 0.80,
-  //       onPressed: () {
-  //         _pageProvider.createChat();
-  //       },
-  //     ),
-  //   );
-  // }
+  Widget _createChatButton() {
+    return Visibility(
+      visible: _userPageProvider.selectedUser.isNotEmpty,
+      child: CustomRoundButton(
+        height:  deviceHeight * 0.065,
+          width:deviceWidth * 0.6,
+          loading:loading,
+          title: _userPageProvider.selectedUser.length == 1
+              ? "Chat With ${_userPageProvider.selectedUser.first.name}"
+              : "Create Group Chat",
+          onPress: (){
+          setLoading(true);
+          _userPageProvider.createChat();
+          setLoading(false);
+
+          },
+          color: AppColor.kButtonColor
+
+      )
+    );
+  }
 }

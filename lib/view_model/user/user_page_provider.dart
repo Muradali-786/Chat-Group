@@ -1,4 +1,7 @@
+import 'package:chat_group/model/chat.dart';
+import 'package:chat_group/view/chat_1v1/chat_page.dart';
 import 'package:chat_group/view_model/auth/auth_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 
@@ -62,5 +65,48 @@ class UserPageProvider with ChangeNotifier {
       selectedUser.add(userModel);
     }
     notifyListeners();
+  }
+
+  void createChat() async {
+    try {
+      //create chat
+      List<String> memberIds = _selectedUser.map((e) => e.uid).toList();
+      memberIds.add(_auth.chatUserData.uid);
+
+      bool isGroup = _selectedUser.length > 1;
+      DocumentReference? _doc = await _dataBaseService.createChat(
+          {"is_group": isGroup, "is_activity": false, "members": memberIds});
+
+      //navigate to chat page
+
+      List<ChatUserModel> _members = [];
+      for (var uid in memberIds) {
+        DocumentSnapshot _userSnapshot = await _dataBaseService.getUser(uid);
+        Map<String, dynamic> userData =
+            _userSnapshot.data() as Map<String, dynamic>;
+        userData["uid"] = _userSnapshot.id;
+        _members.add(
+          ChatUserModel.fromJSON(
+            userData,
+          ),
+        );
+      }
+      ChatPage _chatPage = ChatPage(
+        chat: Chat(
+          uid: _doc!.id,
+          currentUserUid: _auth.chatUserData.uid,
+          members: _members,
+          messages: [],
+          activity: false,
+          group: isGroup,
+        ),
+      );
+      _selectedUser=[];
+      notifyListeners();
+      _navigationService.navigateToPage(_chatPage);
+    } catch (e) {
+      print('error creating chat');
+      print(e);
+    }
   }
 }
