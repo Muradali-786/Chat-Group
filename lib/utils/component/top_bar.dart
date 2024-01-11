@@ -31,24 +31,22 @@ class TopBar extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (secondaryAction != null) secondaryAction!,
-        Column(
-          children: [
-            _titleBar(),
-          ],
-        ),
+        _titleBar(),
         if (primaryAction != null) primaryAction!,
       ],
     );
   }
 
   Widget _titleBar() {
-    return Text(
-      _barTitle,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(
-        color: AppColor.kTextWhiteColor,
-        fontSize: fontSize,
-        fontWeight: FontWeight.w700,
+    return Expanded(
+      child: Text(
+        _barTitle,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          color: AppColor.kTextWhiteColor,
+          fontSize: fontSize,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }
