@@ -147,32 +147,33 @@ class _ChatPageState extends State<ChatPage> {
         borderRadius: BorderRadius.circular(100),
       ),
       child: Form(
+          key: _messageFormState,
           child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          _messageTextFiled(),
-          _sendMessageButton(),
-          _imageMessageButton(),
-        ],
-      )),
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              _messageTextFiled(),
+              _sendMessageButton(),
+              _imageMessageButton(),
+            ],
+          )),
     );
   }
 
   Widget _messageTextFiled() {
-    chatPageProvider.message = msgController.text.toString();
+
     return SizedBox(
       width: deviceWidth * 0.7,
       child: CustomInputTextField(
           myController: msgController,
           focusNode: msgFocus,
           onSaved: (e) {
-            // chatPageProvider.message = e;
+            chatPageProvider.message = e;
           },
           onFieldSubmittedValue: (e) {},
           hint: 'Type your message',
-          regEx: r"^(\*$).+",
+          regEx: r"^(?!\s*$).+",
           keyBoardType: TextInputType.text),
     );
   }
@@ -182,17 +183,20 @@ class _ChatPageState extends State<ChatPage> {
     return Container(
       height: _size,
       width: _size,
-      margin: EdgeInsets.only(top: deviceHeight*0.02),
+      margin: EdgeInsets.only(top: deviceHeight * 0.02),
       child: IconButton(
         icon: const Icon(
           Icons.send,
           color: AppColor.kWhite,
         ),
         onPressed: () {
-          if (msgController.text.isNotEmpty) {
+          if (_messageFormState.currentState!.validate()) {
+            _messageFormState.currentState!.save();
             chatPageProvider.sentTextMessage();
+            _messageFormState.currentState!.reset();
             msgController.clear();
           }
+
         },
       ),
     );
@@ -203,13 +207,13 @@ class _ChatPageState extends State<ChatPage> {
     return Container(
       height: _size,
       width: _size,
-      margin: EdgeInsets.only(top: deviceHeight*0.035),
+      margin: EdgeInsets.only(top: deviceHeight * 0.035),
       child: FloatingActionButton(
         backgroundColor: AppColor.kButtonColor,
         onPressed: () {
           chatPageProvider.sentImageMessage();
         },
-        child: Center(
+        child: const Center(
             child: const Icon(
           Icons.camera_enhance,
           color: AppColor.kWhite,

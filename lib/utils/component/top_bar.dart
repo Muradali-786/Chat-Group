@@ -31,7 +31,11 @@ class TopBar extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (secondaryAction != null) secondaryAction!,
-        _titleBar(),
+        Column(
+          children: [
+            _titleBar(),
+          ],
+        ),
         if (primaryAction != null) primaryAction!,
       ],
     );
